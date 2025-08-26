@@ -3,9 +3,9 @@
   if (window.__CBCAPTCHA_LOADED) return;
   window.__CBCAPTCHA_LOADED = true;
 
-  const TRIGGER_PROBABILITY = 0.6;
+  const TRIGGER_PROBABILITY = 0.9;
   const CHECKBOX_RATIO = 0.8;
-  const VALID_DURATION_MS = 2 * 60 * 1000;
+  const VALID_DURATION_MS = 30 * 1000;
 
   const STR = {
     en: {
@@ -28,7 +28,7 @@
     }
   };
 
-  let lang = 'en';
+  let lang = 'zh';
   let validUntil = 0;
   let pendingAction = null;
   let overlayEl, boxEl, doneEl, failedEl;
