@@ -73,7 +73,7 @@
     }
   };
 
-  let lang = 'zh';
+  let lang = 'en';
   let validUntil = 0;
   let pendingAction = null;
   let overlayEl, boxEl, doneEl, failedEl, langSelect;
