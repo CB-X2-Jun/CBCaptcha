@@ -1,4 +1,4 @@
-// cbcaptcha.js - CBCaptcha demo client
+// cbcaptcha.js - CBCaptcha demo client with multi-language support
 (function () {
   if (window.__CBCAPTCHA_LOADED) return;
   window.__CBCAPTCHA_LOADED = true;
@@ -25,13 +25,58 @@
       fail: "验证失败，请重试",
       lang: "语言：",
       checkbox_label: "我是人类"
+    },
+    ja: {
+      title: "人間であることを証明",
+      clickbox: "確認のためにボックスをクリック",
+      slider: "確認のためにスライド",
+      success: "検証に成功しました。処理を続行中...",
+      fail: "検証に失敗しました。もう一度お試しください。",
+      lang: "言語：",
+      checkbox_label: "私は人間です"
+    },
+    fr: {
+      title: "Prouvez que vous êtes humain",
+      clickbox: "Cliquez sur la case pour confirmer",
+      slider: "Faites glisser pour confirmer",
+      success: "Vérification réussie. En cours...",
+      fail: "Échec de la vérification. Veuillez réessayer.",
+      lang: "Langue :",
+      checkbox_label: "Je suis humain"
+    },
+    ko: {
+      title: "당신이 인간임을 증명하세요",
+      clickbox: "확인하려면 상자를 클릭하세요",
+      slider: "확인하려면 슬라이드하세요",
+      success: "확인되었습니다. 진행 중...",
+      fail: "확인에 실패했습니다. 다시 시도하세요.",
+      lang: "언어:",
+      checkbox_label: "나는 인간입니다"
+    },
+    de: {
+      title: "Beweisen Sie, dass Sie menschlich sind",
+      clickbox: "Klicken Sie zur Bestätigung auf das Kästchen",
+      slider: "Zum Bestätigen schieben",
+      success: "Verifizierung erfolgreich. Fortfahren...",
+      fail: "Verifizierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+      lang: "Sprache:",
+      checkbox_label: "Ich bin ein Mensch"
+    },
+    ru: {
+      title: "Докажите, что вы человек",
+      clickbox: "Нажмите на поле для подтверждения",
+      slider: "Проведите для подтверждения",
+      success: "Проверка пройдена. Продолжение...",
+      fail: "Проверка не пройдена. Попробуйте снова.",
+      lang: "Язык:",
+      checkbox_label: "Я человек"
     }
   };
 
   let lang = 'zh';
   let validUntil = 0;
   let pendingAction = null;
-  let overlayEl, boxEl, doneEl, failedEl;
+  let overlayEl, boxEl, doneEl, failedEl, langSelect;
 
   function el(tag, cls, html) {
     const e = document.createElement(tag);
@@ -52,33 +97,31 @@
     const langLabel = el('span', null, STR[lang].lang);
     langDiv.appendChild(langLabel);
 
-    const checkboxCn = el('label', 'cbc-lang-checkbox');
-    const cbInputCn = el('input');
-    cbInputCn.type = 'checkbox';
-    cbInputCn.checked = lang === 'zh';
-    cbInputCn.setAttribute('data-lang', 'zh');
-    checkboxCn.appendChild(cbInputCn);
-    checkboxCn.appendChild(document.createTextNode('简体中文'));
-    langDiv.appendChild(checkboxCn);
+    // Create language dropdown
+    langSelect = el('select', 'cbc-lang-select');
+    const languages = [
+      { code: 'zh', name: '简体中文' },
+      { code: 'en', name: 'English' },
+      { code: 'ja', name: '日本語' },
+      { code: 'fr', name: 'Français' },
+      { code: 'ko', name: '한국어' },
+      { code: 'de', name: 'Deutsch' },
+      { code: 'ru', name: 'Русский' }
+    ];
+    
+    languages.forEach(langObj => {
+      const option = el('option');
+      option.value = langObj.code;
+      option.textContent = langObj.name;
+      if (lang === langObj.code) option.selected = true;
+      langSelect.appendChild(option);
+    });
 
-    const checkboxEn = el('label', 'cbc-lang-checkbox');
-    const cbInputEn = el('input');
-    cbInputEn.type = 'checkbox';
-    cbInputEn.checked = lang === 'en';
-    cbInputEn.setAttribute('data-lang', 'en');
-    checkboxEn.appendChild(cbInputEn);
-    checkboxEn.appendChild(document.createTextNode('English'));
-    langDiv.appendChild(checkboxEn);
+    langSelect.addEventListener('change', () => {
+      setLang(langSelect.value);
+    });
 
-    function setLang(l) {
-      lang = l;
-      updateUI();
-      cbInputEn.checked = (l === 'en');
-      cbInputCn.checked = (l === 'zh');
-    }
-    cbInputCn.addEventListener('change', ()=> { if (cbInputCn.checked) setLang('zh'); else setLang('en'); });
-    cbInputEn.addEventListener('change', ()=> { if (cbInputEn.checked) setLang('en'); else setLang('zh'); });
-
+    langDiv.appendChild(langSelect);
     boxEl.appendChild(langDiv);
 
     const challengeMount = el('div', 'cbc-challenge');
@@ -100,44 +143,50 @@
     document.body.appendChild(overlayEl);
   }
 
-function updateUI() {
-  if (!boxEl) return;
-
-  // 更新标题
-  const title = boxEl.querySelector('.cbc-title');
-  if (title) title.textContent = STR[lang].title;
-
-  // 更新语言标签
-  const langLabel = boxEl.querySelector('.cbc-lang span');
-  if (langLabel) langLabel.textContent = STR[lang].lang;
-
-  // 更新帮助提示
-  const help = boxEl.querySelector('.cbc-help');
-  if (help) {
-    // 判断当前是 checkbox 还是 slider
-    const challenge = boxEl.querySelector('.cbc-challenge');
-    if (challenge && challenge.querySelector('.cbc-check-box')) {
-      help.textContent = STR[lang].clickbox;
-    } else if (challenge && challenge.querySelector('.cbc-slider')) {
-      help.textContent = STR[lang].slider;
-    } else {
-      help.textContent = '';
+  function setLang(l) {
+    lang = l;
+    updateUI();
+    if (langSelect) {
+      langSelect.value = l;
     }
   }
 
-  // 更新 checkbox 标签文字
-  const cbLabelText = boxEl.querySelector('.cbc-checkbox span');
-  if (cbLabelText) cbLabelText.textContent = STR[lang].checkbox_label;
+  function updateUI() {
+    if (!boxEl) return;
 
-  // 更新成功/失败提示
-  if (doneEl && doneEl.style.display !== 'none') {
-    doneEl.textContent = STR[lang].success;
-  }
-  if (failedEl && failedEl.style.display !== 'none') {
-    failedEl.textContent = STR[lang].fail;
-  }
-}
+    // Update title
+    const title = boxEl.querySelector('.cbc-title');
+    if (title) title.textContent = STR[lang].title;
 
+    // Update language label
+    const langLabel = boxEl.querySelector('.cbc-lang span');
+    if (langLabel) langLabel.textContent = STR[lang].lang;
+
+    // Update help text
+    const help = boxEl.querySelector('.cbc-help');
+    if (help) {
+      const challenge = boxEl.querySelector('.cbc-challenge');
+      if (challenge && challenge.querySelector('.cbc-check-box')) {
+        help.textContent = STR[lang].clickbox;
+      } else if (challenge && challenge.querySelector('.cbc-slider')) {
+        help.textContent = STR[lang].slider;
+      } else {
+        help.textContent = '';
+      }
+    }
+
+    // Update checkbox label text
+    const cbLabelText = boxEl.querySelector('.cbc-checkbox span');
+    if (cbLabelText) cbLabelText.textContent = STR[lang].checkbox_label;
+
+    // Update success/failure messages
+    if (doneEl && doneEl.style.display !== 'none') {
+      doneEl.textContent = STR[lang].success;
+    }
+    if (failedEl && failedEl.style.display !== 'none') {
+      failedEl.textContent = STR[lang].fail;
+    }
+  }
 
   function showCaptcha(onSuccess, onFail) {
     if (!overlayEl) buildOverlay();
