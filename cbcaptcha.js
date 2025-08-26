@@ -96,11 +96,44 @@
     document.body.appendChild(overlayEl);
   }
 
-  function updateUI() {
-    if (!boxEl) return;
-    const title = boxEl.querySelector('.cbc-title');
-    if (title) title.textContent = STR[lang].title;
+function updateUI() {
+  if (!boxEl) return;
+
+  // 更新标题
+  const title = boxEl.querySelector('.cbc-title');
+  if (title) title.textContent = STR[lang].title;
+
+  // 更新语言标签
+  const langLabel = boxEl.querySelector('.cbc-lang span');
+  if (langLabel) langLabel.textContent = STR[lang].lang;
+
+  // 更新帮助提示
+  const help = boxEl.querySelector('.cbc-help');
+  if (help) {
+    // 判断当前是 checkbox 还是 slider
+    const challenge = boxEl.querySelector('.cbc-challenge');
+    if (challenge && challenge.querySelector('.cbc-check-box')) {
+      help.textContent = STR[lang].clickbox;
+    } else if (challenge && challenge.querySelector('.cbc-slider')) {
+      help.textContent = STR[lang].slider;
+    } else {
+      help.textContent = '';
+    }
   }
+
+  // 更新 checkbox 标签文字
+  const cbLabelText = boxEl.querySelector('.cbc-checkbox span');
+  if (cbLabelText) cbLabelText.textContent = STR[lang].checkbox_label;
+
+  // 更新成功/失败提示
+  if (doneEl && doneEl.style.display !== 'none') {
+    doneEl.textContent = STR[lang].success;
+  }
+  if (failedEl && failedEl.style.display !== 'none') {
+    failedEl.textContent = STR[lang].fail;
+  }
+}
+
 
   function showCaptcha(onSuccess, onFail) {
     if (!overlayEl) buildOverlay();
