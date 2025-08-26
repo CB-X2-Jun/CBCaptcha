@@ -22,7 +22,7 @@ CBCaptcha 是一个简易的人机验证 Demo，灵感来自 hCaptcha / reCaptch
 ### 使用方法
 在任意页面 `<head>` 或 `<body>` 末尾添加：
 ```html
-<link rel="stylesheet" href="https://<your-domain>/cbcaptcha.css">
-<script src="https://<your-domain>/cbcaptcha.js"></script>
+<link rel="stylesheet" href="https://cb-x2-jun.github.io/CBCaptcha/cbcaptcha.css">
+<script src="https://cb-x2-jun.github.io/CBCaptcha/cbcaptcha.js"></script>
 ```
 然后页面中用户点击 `<a>` 链接，就有概率触发 CBCaptcha。
