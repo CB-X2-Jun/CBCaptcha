@@ -92,6 +92,10 @@
     failedEl = el('div', 'cbc-failed');
     boxEl.appendChild(failedEl);
 
+    const footer = el('div', 'cbc-footer');
+    footer.innerHTML = 'Powered by <a href="https://github.com/CB-X2-Jun/CBCaptcha" target="_blank">CBCaptcha</a>';
+    boxEl.appendChild(footer);
+
     overlayEl.appendChild(boxEl);
     document.body.appendChild(overlayEl);
   }
