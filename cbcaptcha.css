@@ -116,3 +116,21 @@
   gap:8px;
   align-items:center;
 }
+
+.cbc-footer {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  font-size: 12px;
+  color: #555;
+}
+
+.cbc-footer a,a:visited {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.cbc-footer a:hover,a:active {
+  text-decoration: underline;
+}
+
